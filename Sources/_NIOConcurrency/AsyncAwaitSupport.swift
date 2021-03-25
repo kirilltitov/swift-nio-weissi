@@ -31,6 +31,7 @@ extension NIO.System {
 #if compiler(>=5.4) // we cannot write this on one line with `&&` because Swift 5.0 doesn't like it...
 #if compiler(>=5.4) && $AsyncAwait
 import NIO
+import _Concurrency
 
 extension EventLoopFuture {
     /// Get the value/error from an `EventLoopFuture` in an `async` context.
@@ -177,7 +178,7 @@ extension ChannelPipeline {
 
     public func addHandlers(_ handlers: [ChannelHandler],
                             position: ChannelPipeline.Position = .last) async throws {
-        try await self.addHandlers(handlers, position: position)
+        try await self.addHandlers(handlers, position: position).get()
     }
 
     public func addHandlers(_ handlers: ChannelHandler...,

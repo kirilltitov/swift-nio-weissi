@@ -19,6 +19,7 @@ import Dispatch
 
 #if compiler(>=5.4) // we cannot write this on one line with `&&` because Swift 5.0 doesn't like it...
 #if compiler(>=5.4) && $AsyncAwait
+import _Concurrency
 
 let group = MultiThreadedEventLoopGroup(numberOfThreads: 1)
 defer {

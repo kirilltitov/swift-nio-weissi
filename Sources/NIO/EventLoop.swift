@@ -222,7 +222,7 @@ public struct EventLoopIterator: Sequence, IteratorProtocol {
 ///
 /// Because an `EventLoop` may be shared between multiple `Channel`s it's important to _NOT_ block while processing IO / tasks. This also includes long running computations which will have the same
 /// effect as blocking in this case.
-public protocol EventLoop: EventLoopGroup {
+public protocol EventLoop: EventLoopGroup, UnsafeSendable {
     /// Returns `true` if the current `NIOThread` is the same as the `NIOThread` that is tied to this `EventLoop`. `false` otherwise.
     var inEventLoop: Bool { get }
 
@@ -274,6 +274,9 @@ public protocol EventLoop: EventLoopGroup {
     /// allows `EventLoop`s to cache a pre-succeded `Void` future to prevent superfluous allocations.
     func makeSucceededVoidFuture() -> EventLoopFuture<Void>
 }
+
+// #if compiler(>=5.4) // we cannot write this on one line with `&&` because Swift 5.0 doesn't like it...
+
 
 extension EventLoop {
     /// Default implementation of `makeSucceededVoidFuture`: Return a fresh future (which will allocate).
